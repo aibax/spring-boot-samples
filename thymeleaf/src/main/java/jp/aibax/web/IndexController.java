@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class IndexController
 {
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    @ResponseBody
     String index()
     {
-        return "Hello World!";
+        return "index";
     }
 }
