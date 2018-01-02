@@ -29,5 +29,9 @@ dependencies {
     runtime 'org.springframework.boot:spring-boot-devtools'
 }
 
+// Thymeleaf のバージョンの設定
+ext['thymeleaf.version'] = '3.0.9.RELEASE'
+ext['thymeleaf-layout-dialect.version'] = '2.2.2'
+
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
