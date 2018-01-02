@@ -23,10 +23,15 @@ repositories {
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compileOnly 'org.projectlombok:lombok:1.16.10'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     runtime 'org.springframework.boot:spring-boot-devtools'
 }
+
+// Thymeleaf のバージョンの設定
+ext['thymeleaf.version'] = '3.0.9.RELEASE'
+ext['thymeleaf-layout-dialect.version'] = '2.2.2'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
