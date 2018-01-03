@@ -1,4 +1,3 @@
 security:
-  user:
-    name: admin
-    password: secret
+  basic:
+    enabled: false
