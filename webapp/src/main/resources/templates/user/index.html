@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>Home</title>
+  <title>User</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" />
-  <link rel="stylesheet" th:href="@{/css/index.css}" />
+  <link rel="stylesheet" th:href="@{/css/user.css}" />
 </head>
 <body>
 <nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
   <span class="navbar-brand mb-0 h1">Spring Boot Samples</span>
   <div class="collapse navbar-collapse">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="#" th:href="@{/}">Home</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="#" th:href="@{/user}">User</a>
       </li>
     </ul>
@@ -32,10 +32,30 @@
   </div>
 </nav>
 <main role="main" class="container">
-  <div class="content">
-    <h1>Hello, <span th:text="${name}">World</span>!</h1>
-    <p class="lead">The quick brown fox jumps over the lazy dog.</p>
-  </div>
+  <h1>Users</h1>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Login ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Menu</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}" th:object="${user}">
+      <th scope="row"><span th:text="*{id}">ID</span></th>
+      <td><span th:text="*{loginId}">ログインID</span></td>
+      <td><span th:text="*{name}">ユーザー名</span></td>
+      <td>
+        <a href="#" th:href="@{/user/__*{id}__/edit}">Edit</a>
+        &nbsp;|&nbsp;
+        <a href="#" th:href="@{/user/__*{id}__/delete}">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <a href="#" th:href="@{/user/add}">Add User</a>
 </main>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
