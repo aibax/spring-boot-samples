@@ -1,5 +1,8 @@
 package jp.aibax.configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -7,14 +10,16 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import jp.aibax.security.User;
-import jp.aibax.service.SampleUserStore;
+import jp.aibax.data.domain.User;
+import jp.aibax.data.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +27,7 @@ import jp.aibax.service.SampleUserStore;
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements UserDetailsService
 {
     @Autowired
-    private SampleUserStore sampleUserStore;
+    private UserRepository userRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception
@@ -76,13 +81,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements User
             throw new UsernameNotFoundException(null);
         }
 
-        User user = sampleUserStore.findByLoginId(username);
+        User user = userRepository.findByLoginId(username);
 
         if (user == null)
         {
             throw new UsernameNotFoundException("User is not found. (" + username + ")");
         }
 
-        return user;
+        String password = user.getPassword();
+        String displayName = user.getName();
+
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>()
+        {
+            {
+                /* 一般ユーザー権限 */
+                add(new SimpleGrantedAuthority("ROLE_USER"));
+
+                /* ログインIDが 'admin' のユーザーは管理者ユーザーとする */
+                if (user.getLoginId().equals("admin"))
+                {
+                    /* 管理者ユーザー権限 */
+                    add(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR"));
+                }
+            }
+        };
+
+        return new jp.aibax.security.User(username, password, displayName, authorities);
     }
 }
