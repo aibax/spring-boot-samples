@@ -14,3 +14,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none  # H2 Databaseの場合、これを設定しないと起動時にデータベースが初期化されるので注意
+
+security:
+  basic:
+    enabled: false

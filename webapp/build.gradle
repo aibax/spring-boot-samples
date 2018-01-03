@@ -25,6 +25,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4'
     compile 'com.h2database:h2:1.4.195'
     compileOnly 'org.projectlombok:lombok:1.16.10'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -34,6 +36,7 @@ dependencies {
 // Thymeleaf のバージョンの設定
 ext['thymeleaf.version'] = '3.0.9.RELEASE'
 ext['thymeleaf-layout-dialect.version'] = '2.2.2'
+ext['thymeleaf-extras-springsecurity4.version'] = '3.0.2.RELEASE'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
