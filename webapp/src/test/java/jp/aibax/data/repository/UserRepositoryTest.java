@@ -1,6 +1,7 @@
 package jp.aibax.data.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,8 +12,8 @@ import org.junit.runner.RunWith;
 import jp.aibax.data.domain.User;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -31,10 +32,10 @@ public class UserRepositoryTest
     @Test
     public void testFindAll()
     {
-        List<User> beacons = userRepository.findAll();
-        assertTrue(beacons.size() > 0);
+        List<User> users = userRepository.findAll();
+        assertTrue(users.size() > 0);
 
-        beacons.forEach(System.out::println);
+        users.forEach(System.out::println);
     }
 
     @Test
@@ -47,21 +48,21 @@ public class UserRepositoryTest
     @Test
     public void testFindById()
     {
-        User admin = userRepository.findByLoginId("admin");
-        assertNotNull(admin);
-        System.out.println(admin);
+        Optional<User> admin = userRepository.findByLoginId("admin");
+        assertTrue(admin.isPresent());
+        System.out.println(admin.get());
 
-        User manager = userRepository.findByLoginId("manager");
-        assertNotNull(manager);
-        System.out.println(manager);
+        Optional<User> manager = userRepository.findByLoginId("manager");
+        assertTrue(manager.isPresent());
+        System.out.println(manager.get());
 
-        User developer = userRepository.findByLoginId("developer");
-        assertNotNull(developer);
-        System.out.println(developer);
+        Optional<User> developer = userRepository.findByLoginId("developer");
+        assertTrue(developer.isPresent());
+        System.out.println(developer.get());
 
-        User guest = userRepository.findByLoginId("guest");
-        assertNotNull(guest);
-        System.out.println(guest);
+        Optional<User> guest = userRepository.findByLoginId("guest");
+        assertTrue(guest.isPresent());
+        System.out.println(guest.get());
     }
 
     @Test
@@ -94,16 +95,20 @@ public class UserRepositoryTest
         if (userId != null)
         {
             /* By ID */
-            User user1 = userRepository.findOne(userId);
-            assertNotNull(user1);
-            assertEquals(user1.getLoginId(), "user");
-            assertEquals(user1.getName(), "New User");
+            Optional<User> user1 = userRepository.findById(userId);
+            assertTrue(user1.isPresent());
+            user1.ifPresent(u -> {
+                assertEquals(u.getLoginId(), "user");
+                assertEquals(u.getName(), "New User");
+            });
 
             /* By Login ID */
-            User user2 = userRepository.findByLoginId("user");
-            assertNotNull(user2);
-            assertEquals(user2.getLoginId(), "user");
-            assertEquals(user2.getName(), "New User");
+            Optional<User> user2 = userRepository.findByLoginId("user");
+            assertTrue(user2.isPresent());
+            user2.ifPresent(u -> {
+                assertEquals(u.getLoginId(), "user");
+                assertEquals(u.getName(), "New User");
+            });
         }
 
         /* Delete */
@@ -112,17 +117,17 @@ public class UserRepositoryTest
             /* Before */
             assertEquals(userRepository.count(), 5);
 
-            User user = userRepository.findOne(userId);
-            assertNotNull(user);
+            Optional<User> user = userRepository.findById(userId);
+            assertTrue(user.isPresent());
 
             /* Do */
-            userRepository.delete(user);
+            user.ifPresent(u -> userRepository.delete(u));
 
             /* After */
             assertEquals(userRepository.count(), 4);
 
-            User deletedUser = userRepository.findOne(userId);
-            assertNull(deletedUser);
+            Optional<User> deletedUser = userRepository.findById(userId);
+            assertFalse(deletedUser.isPresent());
         }
     }
 }

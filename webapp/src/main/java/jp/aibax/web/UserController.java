@@ -1,9 +1,9 @@
 package jp.aibax.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,14 +59,13 @@ public class UserController
     @RequestMapping(value = "{id}/edit", method = RequestMethod.GET)
     public String edit(UserForm form, @PathVariable("id") Integer id)
     {
-        User user = userRepository.findOne(id);
+        Optional<User> user = userRepository.findById(id);
 
-        if (user != null)
-        {
-            form.setId(user.getId());
-            form.setLoginId(user.getLoginId());
-            form.setName(user.getName());
-        }
+        user.ifPresent(u -> {
+            form.setId(u.getId());
+            form.setLoginId(u.getLoginId());
+            form.setName(u.getName());
+        });
 
         return "user/edit";
     }
@@ -74,20 +73,19 @@ public class UserController
     @RequestMapping(value = "{id}/edit", method = RequestMethod.POST)
     public String edit(UserForm form, @PathVariable("id") Integer id, BindingResult result)
     {
-        User user = userRepository.findOne(id);
+        Optional<User> user = userRepository.findById(id);
 
-        if (user != null)
-        {
-            user.setLoginId(form.getLoginId());
-            user.setName(form.getName());
+        user.ifPresent(u -> {
+            u.setLoginId(form.getLoginId());
+            u.setName(form.getName());
 
             if (form.getBCryptPassword() != null)
             {
-                user.setPassword(form.getBCryptPassword());
+                u.setPassword(form.getBCryptPassword());
             }
 
-            userRepository.save(user);
-        }
+            userRepository.save(u);
+        });
 
         return "redirect:/user/";
     }
@@ -95,7 +93,7 @@ public class UserController
     @RequestMapping(value = "{id}/delete", method = RequestMethod.GET)
     public String delete(UserForm form, @PathVariable("id") Integer id)
     {
-        userRepository.delete(id);
+        userRepository.deleteById(id);
 
         return "redirect:/user/";
     }

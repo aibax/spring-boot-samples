@@ -2,6 +2,7 @@ package jp.aibax.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -81,15 +82,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements User
             throw new UsernameNotFoundException(null);
         }
 
-        User user = userRepository.findByLoginId(username);
+        Optional<User> user = userRepository.findByLoginId(username);
 
-        if (user == null)
+        if (!user.isPresent())
         {
             throw new UsernameNotFoundException("User is not found. (" + username + ")");
         }
 
-        String password = user.getPassword();
-        String displayName = user.getName();
+        String password = user.get().getPassword();
+        String displayName = user.get().getName();
 
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>()
         {
@@ -98,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements User
                 add(new SimpleGrantedAuthority("ROLE_USER"));
 
                 /* ログインIDが 'admin' のユーザーは管理者ユーザーとする */
-                if (user.getLoginId().equals("admin"))
+                if (user.get().getLoginId().equals("admin"))
                 {
                     /* 管理者ユーザー権限 */
                     add(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR"));
