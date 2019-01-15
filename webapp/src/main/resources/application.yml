@@ -1,0 +1,20 @@
+spring:
+  thymeleaf:
+    mode: HTML
+
+  datasource:
+    platform: h2
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username:
+    password:
+    initialization-mode: embedded
+    sqlScriptEncoding: UTF-8
+
+  jpa:
+    hibernate:
+      ddl-auto: none  # H2 Databaseの場合、これを設定しないと起動時にデータベースが初期化されるので注意
+
+security:
+  basic:
+    enabled: false

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>User</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" />
+  <link rel="stylesheet" th:href="@{/css/user.css}" />
+</head>
+<body>
+<nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
+  <span class="navbar-brand mb-0 h1">Spring Boot Samples</span>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#" th:href="@{/}">Home</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="#" th:href="@{/user}">User</a>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown">
+        <a id="username" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span sec:authentication="principal.displayName" /></a>
+        <div class="dropdown-menu" aria-labelledby="username">
+          <a class="dropdown-item" href="#" th:href="@{/logout}">Sign out</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+<main role="main" class="container">
+  <h1>Users</h1>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Login ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Menu</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}" th:object="${user}">
+      <th scope="row"><span th:text="*{id}">ID</span></th>
+      <td><span th:text="*{loginId}">ログインID</span></td>
+      <td><span th:text="*{name}">ユーザー名</span></td>
+      <td>
+        <a href="#" th:href="@{/user/__*{id}__/edit}">Edit</a>
+        &nbsp;|&nbsp;
+        <a href="#" th:href="@{/user/__*{id}__/delete}">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <a href="#" th:href="@{/user/add}">Add User</a>
+</main>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+</body>
+</html>
